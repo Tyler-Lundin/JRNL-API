@@ -1,7 +1,8 @@
 import mongoose, { Mongoose } from 'mongoose'
 
 export interface IUser {
-  id: string
+  id?: string
+  _id?: string
   email: string
   password?: string // hashed
   jrnlIDs: mongoose.Schema.Types.ObjectId[]

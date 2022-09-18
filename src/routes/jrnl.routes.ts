@@ -4,7 +4,7 @@ const router = express.Router()
 import JRNL from '../controllers/jrnl.controller'
 
 router.get(
-  '/jrnls',
+  '/all',
   asyncHandler(async (req: Request, res: Response) => {
     JRNL.getAll(req, res)
   })

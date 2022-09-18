@@ -7,6 +7,7 @@ import authRoutes from './routes/auth.routes'
 import jrnlRoutes from './routes/jrnl.routes'
 import connectDB from './config/db'
 import colors from 'colors'
+import cookieParser from 'cookie-parser'
 
 const { bgYellow } = colors
 
@@ -16,8 +17,9 @@ connectDB()
 // middleware
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true }))
-app.use(cors())
+app.use(cors({ credentials: true, origin: 'http://localhost:3000' }))
 app.use(express.json())
+app.use(cookieParser())
 
 // routes
 app.use('/auth', authRoutes)

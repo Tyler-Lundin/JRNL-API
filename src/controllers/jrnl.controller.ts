@@ -1,30 +1,37 @@
+/* eslint-disable no-unused-expressions */
+
 import { Request, Response } from 'express'
 import User, { IUser } from '../models/user.model'
 import Jrnl from '../models/jrnl.model'
 
 const getAll = async (req: Request, res: Response) => {
-  const user = req.user as IUser
+  const { _id } = req.user as IUser
 
   try {
-    const jrnls = Jrnl.find({ userID: user.id })
-    res.json(jrnls)
+    const jrnls = await Jrnl.find({ userID: _id })
+    console.log(jrnls)
+    res.status(200).json({ jrnls })
   } catch (err: any) {
     res.status(500).json({ message: err.message })
   }
 }
 
 const create = async (req: Request, res: Response) => {
-  const userID = req.userID
+  const { email, _id } = req.user as IUser
   const { title, theme } = req.body
-
+  console.log(email, _id, title, theme)
   const jrnl = new Jrnl({
     title,
     theme,
-    userID,
+    userID: _id,
   })
 
-  await User.findByIdAndUpdate(userID, { $push: { jrnlIDs: jrnl._id } })
+  const user = await User.findOne({ email })
+  if (!user) return res.status(404).json({ message: 'User not found' })
+
   try {
+    user.jrnlIDs.push(jrnl.id)
+    await user.save()
     const newJrnl = await jrnl.save()
     res.status(201).json(newJrnl)
   } catch (err: any) {
