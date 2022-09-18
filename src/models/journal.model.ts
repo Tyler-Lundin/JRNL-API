@@ -1,6 +1,6 @@
 import mongoose, { Schema, model } from 'mongoose'
 
-export interface IsJrnl {
+export interface IsJournal {
   title: string
   theme: string
   userID: mongoose.Schema.Types.ObjectId
@@ -19,7 +19,7 @@ const defaultPage: TPage = {
 
 const defaultPages = new Array(99).fill(defaultPage, 0, 99)
 
-const jrnlSchema = new Schema<IsJrnl>(
+const journalSchema = new Schema<IsJournal>(
   {
     title: {
       type: String,
@@ -46,6 +46,6 @@ const jrnlSchema = new Schema<IsJrnl>(
   }
 )
 
-const Jrnl = model('Jrnl', jrnlSchema)
+const Journal = model('Journal', journalSchema)
 
-export default Jrnl
+export default Journal

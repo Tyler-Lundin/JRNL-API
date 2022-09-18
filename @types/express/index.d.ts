@@ -1,4 +1,4 @@
-import { IsJrnl } from 'models/jrnl.model'
+import { IsJournal } from 'models/journal.model'
 import { IsLib } from 'models/lib.model'
 import { IsPage } from 'models/page.model'
 import { IUser } from '../../src/models/user.model'
@@ -9,9 +9,9 @@ declare global {
   namespace Express {
     interface Request {
       user?: Partial<IUser>
-      jrnl?: Partial<IsJrnl>
+      journal?: Partial<IsJournal>
       userID?: string
-      jrnlID?: string
+      journalID?: string
     }
   }
 }

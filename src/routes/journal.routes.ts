@@ -1,54 +1,61 @@
 import express, { Request, Response } from 'express'
 import asyncHandler from 'express-async-handler'
 const router = express.Router()
-import JRNL from '../controllers/jrnl.controller'
+import controller from '../controllers/journal.controller'
 
 router.get(
   '/all',
   asyncHandler(async (req: Request, res: Response) => {
-    JRNL.getAll(req, res)
+    controller.getAll(req, res)
   })
 )
 
 router.post(
   '/create',
   asyncHandler(async (req: Request, res: Response) => {
-    JRNL.create(req, res)
+    controller.create(req, res)
   })
 )
 
 router.delete(
   '/delete/:id',
   asyncHandler(async (req: Request, res: Response) => {
-    JRNL.deleteOne(req, res)
+    controller.deleteOne(req, res)
   })
 )
 
 router.delete(
   '/delete/all',
   asyncHandler(async (req: Request, res: Response) => {
-    JRNL.deleteAll(req, res)
+    controller.deleteAll(req, res)
   })
 )
 
 router.patch(
   '/title/:id',
   asyncHandler(async (req: Request, res: Response) => {
-    JRNL.updateTitle(req, res)
+    controller.updateTitle(req, res)
   })
 )
 
 router.patch(
   '/theme/:id',
   asyncHandler(async (req: Request, res: Response) => {
-    JRNL.updateTheme(req, res)
+    controller.updateTheme(req, res)
   })
 )
 
 router.patch(
   '/page/:id',
   asyncHandler(async (req: Request, res: Response) => {
-    JRNL.updatePage(req, res)
+    controller.updatePage(req, res)
+  })
+)
+
+router.post(
+  '/save',
+  asyncHandler(async (req: Request, res: Response) => {
+    controller.save(req, res)
   })
 )
 

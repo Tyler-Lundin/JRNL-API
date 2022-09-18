@@ -54,7 +54,7 @@ const login = async (req: Request, res: Response) => {
       user: {
         id: user._id,
         email: user.email,
-        jrnlIDs: user.jrnlIDs,
+        journalIDs: user.journalIDs,
       },
     })
 }

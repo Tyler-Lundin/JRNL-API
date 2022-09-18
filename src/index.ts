@@ -4,7 +4,7 @@ import bodyParser from 'body-parser'
 import cors from 'cors'
 import verifyAuthToken from './middleware/verifyAuthToken'
 import authRoutes from './routes/auth.routes'
-import jrnlRoutes from './routes/jrnl.routes'
+import journalRoutes from './routes/journal.routes'
 import connectDB from './config/db'
 import colors from 'colors'
 import cookieParser from 'cookie-parser'
@@ -23,7 +23,7 @@ app.use(cookieParser())
 
 // routes
 app.use('/auth', authRoutes)
-app.use('/jrnl', verifyAuthToken, jrnlRoutes)
+app.use('/journal', verifyAuthToken, journalRoutes)
 
 // server start
 const PORT = process.env.PORT || 3500

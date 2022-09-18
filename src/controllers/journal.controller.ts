@@ -2,15 +2,15 @@
 
 import { Request, Response } from 'express'
 import User, { IUser } from '../models/user.model'
-import Jrnl from '../models/jrnl.model'
+import Journal from '../models/journal.model'
 
 const getAll = async (req: Request, res: Response) => {
   const { _id } = req.user as IUser
 
   try {
-    const jrnls = await Jrnl.find({ userID: _id })
-    console.log(jrnls)
-    res.status(200).json({ jrnls })
+    const journals = await Journal.find({ userID: _id })
+    console.log(journals)
+    res.status(200).json({ journals })
   } catch (err: any) {
     res.status(500).json({ message: err.message })
   }
@@ -20,7 +20,7 @@ const create = async (req: Request, res: Response) => {
   const { email, _id } = req.user as IUser
   const { title, theme } = req.body
   console.log(email, _id, title, theme)
-  const jrnl = new Jrnl({
+  const journal = new Journal({
     title,
     theme,
     userID: _id,
@@ -30,22 +30,22 @@ const create = async (req: Request, res: Response) => {
   if (!user) return res.status(404).json({ message: 'User not found' })
 
   try {
-    user.jrnlIDs.push(jrnl.id)
+    user.journalIDs.push(journal.id)
     await user.save()
-    const newJrnl = await jrnl.save()
-    res.status(201).json(newJrnl)
+    const newJournal = await journal.save()
+    res.status(201).json(newJournal)
   } catch (err: any) {
     res.status(400).json({ message: err.message })
   }
 }
 
 const deleteOne = async (req: Request, res: Response) => {
-  const jrnlID = req.params.id
+  const journalID = req.params.id
   const userID = req.userID
 
   try {
-    await User.findByIdAndUpdate(userID, { $pull: { jrnlIDs: jrnlID } })
-    await Jrnl.findByIdAndDelete(jrnlID)
+    await User.findByIdAndUpdate(userID, { $pull: { journalIDs: journalID } })
+    await Journal.findByIdAndDelete(journalID)
     res.status(200).json({ message: 'Journal deleted' })
   } catch (err: any) {
     res.status(500).json({ message: err.message })
@@ -56,8 +56,8 @@ const deleteAll = async (req: Request, res: Response) => {
   const userID = req.userID
 
   try {
-    await User.findByIdAndUpdate(userID, { jrnlIDs: [] })
-    await Jrnl.deleteMany({ userID })
+    await User.findByIdAndUpdate(userID, { journalIDs: [] })
+    await Journal.deleteMany({ userID })
     res.status(200).json({ message: 'All journals deleted' })
   } catch (err: any) {
     res.status(500).json({ message: err.message })
@@ -65,38 +65,52 @@ const deleteAll = async (req: Request, res: Response) => {
 }
 
 const updateTitle = async (req: Request, res: Response) => {
-  const jrnlID = req.params.id
+  const journalID = req.params.id
   const { title } = req.body
 
   try {
-    const jrnl = await Jrnl.findByIdAndUpdate(jrnlID, { title })
-    res.status(200).json(jrnl)
+    const journal = await Journal.findByIdAndUpdate(journalID, { title })
+    res.status(200).json(journal)
   } catch (err: any) {
     res.status(500).json({ message: err.message })
   }
 }
 
 const updateTheme = async (req: Request, res: Response) => {
-  const jrnlID = req.params.id
+  const journalID = req.params.id
   const { theme } = req.body
 
   try {
-    const jrnl = await Jrnl.findByIdAndUpdate(jrnlID, { theme })
-    res.status(200).json(jrnl)
+    const journal = await Journal.findByIdAndUpdate(journalID, { theme })
+    res.status(200).json(journal)
   } catch (err: any) {
     res.status(500).json({ message: err.message })
   }
 }
 
 const updatePage = async (req: Request, res: Response) => {
-  const jrnlID = req.params.id
+  const journalID = req.params.id
   const { index, page } = req.body
-  const jrnl = await Jrnl.findById(jrnlID)
-  if (!jrnl) return res.status(404).json({ message: 'Journal not found' })
+  const journal = await Journal.findById(journalID)
+  if (!journal) return res.status(404).json({ message: 'Journal not found' })
   try {
-    jrnl.pages[index] = page
-    await jrnl.save()
-    res.status(200).json(jrnl)
+    journal.pages[index] = page
+    await journal.save()
+    res.status(200).json(journal)
+  } catch (err: any) {
+    res.status(500).json({ message: err.message })
+  }
+}
+
+const save = async (req: Request, res: Response) => {
+  const { journal } = req.body
+
+  const savedJournal = await Journal.findById(journal._id)
+  if (!savedJournal) return res.status(404).json({ message: 'Journal not found' })
+  try {
+    savedJournal.pages = journal.pages
+    await savedJournal.save()
+    res.status(200).json(savedJournal)
   } catch (err: any) {
     res.status(500).json({ message: err.message })
   }
@@ -110,4 +124,5 @@ export default {
   updateTitle,
   updateTheme,
   updatePage,
+  save,
 }

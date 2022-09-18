@@ -5,7 +5,7 @@ export interface IUser {
   _id?: string
   email: string
   password?: string // hashed
-  jrnlIDs: mongoose.Schema.Types.ObjectId[]
+  journalIDs: mongoose.Schema.Types.ObjectId[]
 }
 
 const userSchema = new mongoose.Schema<IUser>(
@@ -18,9 +18,9 @@ const userSchema = new mongoose.Schema<IUser>(
       type: String,
       required: true,
     },
-    jrnlIDs: {
+    journalIDs: {
       type: Array(mongoose.Schema.Types.ObjectId),
-      ref: 'Jrnl',
+      ref: 'Journal',
       required: true,
     },
   },
